@@ -34,6 +34,7 @@ if(result.succeeded) {
 
 ## Structure
 * Your rule object layout describes the structure you expect your data to be in
+* Rules of the same type can be chained together `.isLengthGreaterThan(4).isLengthLessThan(100)`
 * An array of rules acts as a logical "AND", where all array elements must pass for the data to be valid
 * An array inside an array element acts as a logical "OR", where only one of the elements needs to be successful to pass
 

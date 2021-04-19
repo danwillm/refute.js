@@ -57,6 +57,8 @@ module.exports = {
             }
 
             this.match = (data) => {
+                if(_types.length === 0) throw new Error(errors.NO_CHECK_SET);
+
                 for (const typeItem of _types) {
                     if (typeof data !== typeItem) return false;
                 }
@@ -89,6 +91,7 @@ module.exports = {
             }
 
             this.match = (data) => {
+                if(_patterns.length === 0) throw new Error(errors.NO_CHECK_SET);
                 for(const patternItem of _patterns) {
                     const regExp = new RegExp(patternItem);
                     if(!regExp.test(data)) return false;
