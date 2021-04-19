@@ -16,12 +16,23 @@ const myRules = {
         phone: [new Refute.PatternCheck('Please enter a valid phone number').isPhoneNumber()],
     }
 };
+
+//Could be the rules for allowing this data:
+
+const validData = {
+    firstname: 'John',
+    lastname: 'Appleseed',
+    contactDetails: {
+        email: 'test@example.com',
+        phone: '+001234567890'
+    }
+};
 ```
 
 Validate the rules:
 
 ```javascript
-const result = Refute.validate(validData, validRules);
+const result = Refute.validate(validData, myRules);
 
 if(result.succeeded) {
     //All good!
