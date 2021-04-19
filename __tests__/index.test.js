@@ -1,9 +1,9 @@
-const refute = require('../src/refute');
+const refute = require('../src');
 
 
 
 
-describe('Refute should pass when', () => {
+describe('When the data entered is valid, it should', () => {
     const validData = {
         firstname: 'john',
         lastname: 'appleseed',
@@ -14,9 +14,9 @@ describe('Refute should pass when', () => {
         favouriteColours: ['blue', 'green']
     };
     const validRules = {
-        firtname: refute.types.number,
+        firtname: new refute.RuleSets.TypeCheck(refute.RuleSets.),
     }
-    test('firstname is set to string', () => {
+    test('Pass when all properties set correctly', () => {
         expect(refute.validate(validData, validRules, (what) => 'Should not fail')).toBe(true);
     });
 });

@@ -1,27 +1,29 @@
-const refute = require('./src/refute');
+const Refute = require('./src');
 
 const validData = {
     firstname: 'john',
     lastname: 'appleseed',
     contactDetails: {
-        email: 'test@example.com',
-        phone: '+00000000000',
+        email: 'test@gmail.com',
+        phone: '+447858601258',
     },
     favouriteColours: ['blue', 'green']
 };
 const validRules = {
-    firstname: new refute.TypeCheck(refute.types.string, 'Please enter a firstname'),
+    firstname: new Refute.TypeCheck('Please enter a firstname').isString(),
+    lastname: new Refute.TypeCheck('Please enter a lastname').isString(),
     contactDetails: {
-        email: new refute.TypeCheck(refute.types.number, 'Please enter an email'),
+        email: [new Refute.TypeCheck('Please enter an email').isString(), new Refute.PatternCheck('Please enter a valid email').isEmail()],
+        phone: [new Refute.PatternCheck('Please enter a valid phone number').isPhoneNumber()],
     }
 }
 
-const result = refute.validate(validData, validRules);
+const result = Refute.validate(validData, validRules);
 
-console.log(result.rulesFailed);
 
-if(result.succeeded) {
-    console.log("did succeed");
+if (result.succeeded) {
+    console.log("Successfully validated");
 } else {
     console.log("did fail");
+    console.log(result.rulesFailed);
 }
