@@ -1,4 +1,4 @@
-const refute = require('../index');
+const refute = require('../src/refute');
 
 
 

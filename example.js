@@ -1,4 +1,4 @@
-const refute = require('./index');
+const refute = require('./src/refute');
 
 const validData = {
     firstname: 'john',
@@ -10,19 +10,18 @@ const validData = {
     favouriteColours: ['blue', 'green']
 };
 const validRules = {
-    firstname: refute.types.string,
+    firstname: new refute.TypeCheck(refute.types.string, 'no firstname'),
     contactDetails: {
-        email: refute.types.string,
+        email: new refute.TypeCheck(refute.types.number, 'no email'),
     }
 }
 
-const result = refute.validate(validData, validRules, (err) => {
-    console.log(err);
-    return 'failed';
-});
+const result = refute.validate(validData, validRules);
 
-if(result) {
-    console.log("Success validating rules");
+console.log(result.rulesFailed);
+
+if(result.succeeded) {
+    console.log("did succeed");
 } else {
-    console.log("Failed to validate rules");
+    console.log("did fail");
 }
