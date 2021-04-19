@@ -45,15 +45,12 @@ module.exports = {
         /***
          * Matches a value and sets the interrogator accordingly
          * @param data
-         * @param interrogator
+         * @returns boolean
          */
-        match(data, interrogator) {
+        match(data) {
             super.setCheckedWith(data);
 
-            if (typeof data !== this.type) {
-                interrogator.rulesFailed.push(this);
-                interrogator.succeeded = false;
-            }
+            return typeof data === this.type;
         };
 
         getFailureMessage() {
@@ -70,11 +67,10 @@ module.exports = {
             super(failureMessage);
         };
 
-        match(data, interrogator) {
+        match(data) {
             super.setCheckedWith(data);
 
-            interrogator.rulesFailed.push(this);
-            interrogator.succeeded = false;
+            return false;
         };
     },
 

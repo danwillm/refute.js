@@ -2,14 +2,28 @@ const typeCompare = require('./typecompare');
 const ruleSets = require('./rules');
 const errors = require('./errors');
 
-
-
+const setInterrogatorFail = (rule, interrogator) => {
+    interrogator.rulesFailed.push(rule);
+    interrogator.succeeded = false;
+}
 
 const checkRuleset = (data, rules, interrogator) => {
     if (!typeCompare.isArray(rules)) rules = [rules];
 
     for (const rule of rules) {
-        rule.match(data, interrogator);
+        if (typeCompare.isArray(rule)) {
+            let succeeded = false;
+
+            for (const ruleItem of rule)
+                if (ruleItem.match(data)) succeeded = true;
+
+            if(!succeeded) {
+                setInterrogatorFail(rule, interrogator);
+            }
+
+        } else {
+            if (!rule.match(data, interrogator)) setInterrogatorFail(rule, interrogator);
+        }
     }
 };
 /***
@@ -26,7 +40,7 @@ const drillUntilCheckable = (data, rules, interrogator) => {
             if (data[k]) {
                 drillUntilCheckable(data[k], v, interrogator);
             } else {
-                new ruleSets.FailAlways(errors.NO_DATA).match(data, interrogator);
+                setInterrogatorFail(new ruleSets.FailAlways(errors.NO_DATA).match(data));
             }
 
         }

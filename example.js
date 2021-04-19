@@ -10,9 +10,9 @@ const validData = {
     favouriteColours: ['blue', 'green']
 };
 const validRules = {
-    firstname: new refute.TypeCheck(refute.types.string, 'no firstname'),
+    firstname: new refute.TypeCheck(refute.types.string, 'Please enter a firstname'),
     contactDetails: {
-        email: new refute.TypeCheck(refute.types.number, 'no email'),
+        email: new refute.TypeCheck(refute.types.number, 'Please enter an email'),
     }
 }
 
