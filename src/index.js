@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const typeCompare = require('./typecompare');
 const RuleSets = require('./rules');
 const errors = require('./errors');

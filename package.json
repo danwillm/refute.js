@@ -1,5 +1,5 @@
 {
-  "name": "refute",
+  "name": "refute.js",
   "version": "0.0.1",
   "description": "",
   "main": "src/index.js",
@@ -11,5 +11,13 @@
   "license": "ISC",
   "devDependencies": {
     "jest": "^26.6.3"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/danwillm/refute.js.git"
+  },
+  "bugs": {
+    "url": "https://github.com/danwillm/refute.js/issues"
+  },
+  "homepage": "https://github.com/danwillm/refute.js#readme"
 }

@@ -102,4 +102,26 @@ describe('Refute should not succeed when', () => {
     test('TypeCheck does not match with data provided', () => {
         expect(refute.validate(invalidData, validRules).succeeded).toBe(false);
     });
+});
+
+describe('StringCheck rules', () => {
+    test('Should pass when checking when data within greater than and less than bounds', () => {
+        const data = {
+            firstname: 'Test',
+        };
+        const rules = {
+            firstname: new refute.StringCheck('Failed').lengthGreaterThan('2').lengthLessThan('10'),
+        };
+
+        expect(refute.validate(data, rules).succeeded).toBe(true);
+    });
+    test('Should fail when data is not within greater than and less than bounds', () => {
+        const data = {
+            lastname: 'SKDGNLKSFDLKSDFLSKDFLSKFDKSJDFL'
+        };
+        const rules = {
+            lastname: new refute.StringCheck('Failed').lengthGreaterThan('2').lengthLessThan('10'),
+        };
+        expect(refute.validate(data, rules).succeeded).toBe(false);
+    })
 })

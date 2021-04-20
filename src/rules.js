@@ -1,10 +1,4 @@
 const errors = require('./errors');
-const typeCompare = require('./typecompare');
-
-const Type = {
-    string: 'string',
-    number: 'number',
-};
 
 const Pattern = {
     phoneNumber: `^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\\s\\./0-9]*$`,
@@ -13,13 +7,19 @@ const Pattern = {
 
 class Rule {
     failureMessage;
+    _rules = [];
 
     constructor(failureMessage) {
         this.failureMessage = failureMessage;
     };
 
     match(data) {
-        throw 'Not implemented'
+        if(this._rules.length === 0) throw new Error(errors.NO_CHECK_SET);
+
+        for (const rule of this._rules) {
+            if(!rule(data)) return false;
+        }
+        return true;
     };
 
     getFailureMessage() {
@@ -42,62 +42,62 @@ module.exports = {
          */
         constructor(failureMessage) {
             super(failureMessage);
-            let _types = [];
-
-            this.isString = () => {
-                _types.push(Type.string);
-
-                return this;
-            }
-
-            this.isNumber = () => {
-                _types.push(Type.number);
-
-                return this;
-            }
-
-            this.match = (data) => {
-                if(_types.length === 0) throw new Error(errors.NO_CHECK_SET);
-
-                for (const typeItem of _types) {
-                    if (typeof data !== typeItem) return false;
-                }
-                return true;
-            }
         };
+        isString() {
+            this._rules.push(data => typeof data === 'string');
+
+            return this;
+        }
+
+        isNumber() {
+            this._rules.push(data => typeof data === 'number');
+
+            return this;
+        }
+
     },
 
     PatternCheck: class PatternCheck extends Rule {
         constructor(failureMessage) {
             super(failureMessage);
+        }
 
-            let _patterns = [];
+        isEmail() {
+            this._rules.push(data => new RegExp(Pattern.email).test(data));
 
-            this.isPhoneNumber = () => {
-                _patterns.push(Pattern.phoneNumber);
+            return this;
+        }
 
-                return this;
-            };
+        isPhoneNumber() {
+            this._rules.push(data => new RegExp(Pattern.phoneNumber).test(data));
 
-            this.isEmail = () => {
-                _patterns.push(Pattern.email);
-                return this;
-            };
+            return this;
+        }
 
-            this.customExpression = (exp) => {
-                _patterns.push(exp);
+        customExpression(exp) {
+            this._rules.push(data => new RegExp(exp).test(data));
 
-                return this;
-            }
+            return this;
+        }
+    },
 
-            this.match = (data) => {
-                if(_patterns.length === 0) throw new Error(errors.NO_CHECK_SET);
-                for(const patternItem of _patterns) {
-                    const regExp = new RegExp(patternItem);
-                    if(!regExp.test(data)) return false;
-                }
-                return true;
-            }
+    StringCheck: class StringCheck extends Rule {
+        constructor(failureMessage) {
+            super(failureMessage);
+
+            return this;
+        };
+
+        lengthLessThan(length) {
+            this._rules.push(data => data.length < length);
+
+            return this;
+        };
+
+        lengthGreaterThan(length) {
+            this._rules.push(data => data.length > length);
+
+            return this;
         }
     },
 
