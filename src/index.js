@@ -1,26 +1,12 @@
 #!/usr/bin/env node
 
-const typeCompare = require('./typecompare');
+const typeCompare = require('./utils/typecompare');
 const RuleSets = require('./rules');
-const errors = require('./errors');
+const errors = require('./utils/errors');
+const Interrogator = require('./utils/interrogator');
 
-const setInterrogatorFail = (rule, interrogator) => {
-    if (!typeCompare.isArray(rule)) rule = [rule];
-
-    interrogator.rulesFailed.push(...rule);
-    interrogator.succeeded = false;
-}
-
-/***
- *
- * @param data
- * @param rules {Array.<RuleSets.Rule> | RuleSets.Rule}
- * @param interrogator
- */
 const checkRuleset = (data, rules, interrogator) => {
     if (!typeCompare.isArray(rules)) rules = [rules];
-
-
     for (const rule of rules) {
         if (typeCompare.isArray(rule)) {
 
@@ -34,12 +20,13 @@ const checkRuleset = (data, rules, interrogator) => {
                 }
                 failedRules.push(ruleItem);
             }
+
             if (!succeeded) {
-                setInterrogatorFail(failedRules, interrogator);
+                failedRules.forEach(r => interrogator.addFailure(r));
             }
         } else {
             if (!rule.match(data)) {
-                setInterrogatorFail(rule, interrogator);
+                interrogator.addFailure(rule);
                 break;
             }
         }
@@ -59,7 +46,7 @@ const drillUntilCheckable = (data, rules, interrogator) => {
             if (data[k]) {
                 drillUntilCheckable(data[k], v, interrogator);
             } else {
-                setInterrogatorFail(new RuleSets.FailAlways(errors.NO_DATA).match(data));
+                interrogator.addFailure(new RuleSets.UtilChecks.FailAlways(errors.NO_DATA).match(data));
             }
 
         }
@@ -68,11 +55,7 @@ const drillUntilCheckable = (data, rules, interrogator) => {
 
 module.exports = {
     validate: (data, rules) => {
-        let interrogator = {
-            rulesFailed: [],
-            succeeded: true,
-        }
-
+        let interrogator = new Interrogator();
         drillUntilCheckable(data, rules, interrogator);
 
         return interrogator;

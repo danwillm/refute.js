@@ -1,4 +1,4 @@
-const rules = require('./rules');
+const rules = require('../rules');
 
 const isObject = (data) => typeof data === 'object' && data !== null;
 const isArray = (data) => Array.isArray(data);
