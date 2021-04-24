@@ -98,6 +98,10 @@ module.exports = {
             this._rules.push(data => data.length > length);
 
             return this;
+        };
+
+        equalTo(comparison) {
+            this._rules.push(data => data === comparison)
         }
     },
 
